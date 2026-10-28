@@ -1,3 +1,8 @@
+
+/* =========================================
+   1. GLOBAL RESET
+========================================= */
+
 * {
     margin: 0;
     padding: 0;
@@ -5,21 +10,55 @@
 }
 
 body {
-    font-family: Inter, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    font-family: Inter, system-ui, -apple-system,
+        BlinkMacSystemFont, "Segoe UI", sans-serif;
     min-height: 100vh;
     background: #07111f;
     color: #ffffff;
     overflow-x: hidden;
 }
 
+button,
+textarea {
+    font: inherit;
+}
+
+button {
+    -webkit-tap-highlight-color: transparent;
+}
+
+button:focus-visible,
+textarea:focus-visible {
+    outline: 2px solid #60a5fa;
+    outline-offset: 3px;
+}
+
+
+/* =========================================
+   2. ORIGINAL GRADIENT BACKGROUND
+========================================= */
+
 .page-bg {
     position: fixed;
     inset: 0;
     z-index: -1;
     background:
-        radial-gradient(circle at top left, rgba(56, 189, 248, 0.18), transparent 32%),
-        radial-gradient(circle at top right, rgba(168, 85, 247, 0.18), transparent 28%),
-        linear-gradient(135deg, #07111f 0%, #0f172a 45%, #111827 100%);
+        radial-gradient(
+            circle at top left,
+            rgba(56, 189, 248, 0.18),
+            transparent 32%
+        ),
+        radial-gradient(
+            circle at top right,
+            rgba(168, 85, 247, 0.18),
+            transparent 28%
+        ),
+        linear-gradient(
+            135deg,
+            #07111f 0%,
+            #0f172a 45%,
+            #111827 100%
+        );
 }
 
 .gradient-circle {
@@ -53,11 +92,276 @@ body {
     left: 35%;
 }
 
+
+/* =========================================
+   3. APPLICATION LAYOUT
+========================================= */
+
+.app-shell {
+    display: flex;
+    width: 100%;
+    min-height: 100vh;
+    position: relative;
+}
+
+.main-column {
+    flex: 1;
+    min-width: 0;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+}
+
 .app-container {
     width: min(1120px, calc(100% - 32px));
     margin: 0 auto;
-    padding: 56px 0 30px;
+    padding: 36px 0 30px;
+    flex: 1;
 }
+
+
+/* =========================================
+   4. CHATGPT-STYLE LEFT SIDEBAR
+========================================= */
+
+.sidebar {
+    width: 270px;
+    min-width: 270px;
+    height: 100vh;
+    position: sticky;
+    top: 0;
+    display: flex;
+    flex-direction: column;
+    padding: 22px 14px;
+    background: rgba(8, 15, 30, 0.96);
+    border-right: 1px solid rgba(148, 163, 184, 0.16);
+    backdrop-filter: blur(20px);
+    z-index: 100;
+    overflow: hidden;
+}
+
+.sidebar-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 28px;
+    padding: 4px 8px;
+}
+
+.sidebar-brand {
+    display: flex;
+    align-items: center;
+    gap: 9px;
+    font-size: 1.2rem;
+    font-weight: 800;
+    letter-spacing: -0.03em;
+    color: #ffffff;
+}
+
+.sidebar-brand span {
+    background: linear-gradient(
+        135deg,
+        #ffffff,
+        #93c5fd,
+        #c084fc
+    );
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+
+.sidebar-close {
+    display: none;
+    background: transparent;
+    color: #cbd5e1;
+    border: none;
+    font-size: 1.2rem;
+    cursor: pointer;
+    padding: 7px;
+    border-radius: 8px;
+}
+
+.sidebar-close:hover {
+    background: rgba(148, 163, 184, 0.15);
+}
+
+.new-chat-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    width: 100%;
+    padding: 13px 16px;
+    background: linear-gradient(
+        135deg,
+        #2563eb,
+        #7c3aed
+    );
+    color: #ffffff;
+    border: none;
+    border-radius: 13px;
+    font-weight: 700;
+    font-size: 0.95rem;
+    cursor: pointer;
+    transition: 0.2s ease;
+    margin-bottom: 30px;
+}
+
+.new-chat-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 10px 25px rgba(37, 99, 235, 0.3);
+}
+
+.new-chat-btn:disabled {
+    opacity: 0.55;
+    cursor: not-allowed;
+    transform: none;
+}
+
+.sidebar-section-heading {
+    font-size: 0.75rem;
+    font-weight: 800;
+    color: #94a3b8;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    padding: 0 12px;
+    margin-bottom: 12px;
+}
+
+.chat-list {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+    flex: 1;
+    min-height: 0;
+    overflow-y: auto;
+    overflow-x: hidden;
+    padding: 3px 2px 16px;
+    scrollbar-width: thin;
+    scrollbar-color: #334155 transparent;
+}
+
+.chat-list::-webkit-scrollbar {
+    width: 5px;
+}
+
+.chat-list::-webkit-scrollbar-thumb {
+    background: #334155;
+    border-radius: 999px;
+}
+
+.empty-chat-list {
+    color: #64748b;
+    font-size: 0.88rem;
+    line-height: 1.6;
+    padding: 12px;
+}
+
+/* Conversation items created by JavaScript */
+
+.chat-item,
+.chat-list-item,
+.chat-history-item {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    width: 100%;
+    min-height: 43px;
+    padding: 11px 12px;
+    border: 1px solid transparent;
+    border-radius: 11px;
+    background: transparent;
+    color: #cbd5e1;
+    text-align: left;
+    font-size: 0.88rem;
+    line-height: 1.4;
+    cursor: pointer;
+    transition: 0.2s ease;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.chat-item:hover,
+.chat-list-item:hover,
+.chat-history-item:hover {
+    background: rgba(148, 163, 184, 0.12);
+    color: #ffffff;
+}
+
+.chat-item.active,
+.chat-item.selected,
+.chat-list-item.active,
+.chat-list-item.selected,
+.chat-history-item.active,
+.chat-history-item.selected,
+.chat-item[aria-current="true"],
+.chat-list-item[aria-current="true"] {
+    background: rgba(59, 130, 246, 0.2);
+    border-color: rgba(96, 165, 250, 0.28);
+    color: #ffffff;
+    font-weight: 700;
+}
+
+.chat-title {
+    flex: 1;
+    min-width: 0;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.chat-item-icon {
+    flex-shrink: 0;
+    opacity: 0.7;
+}
+
+
+/* =========================================
+   5. TOP NAVIGATION BAR
+========================================= */
+
+.topbar {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    width: 100%;
+    min-height: 70px;
+    padding: 12px 28px;
+    background: rgba(8, 15, 30, 0.55);
+    border-bottom: 1px solid rgba(148, 163, 184, 0.12);
+    backdrop-filter: blur(15px);
+}
+
+.sidebar-toggle {
+    display: none;
+    align-items: center;
+    justify-content: center;
+    width: 40px;
+    height: 40px;
+    background: rgba(30, 41, 59, 0.75);
+    color: #ffffff;
+    border: 1px solid rgba(148, 163, 184, 0.2);
+    border-radius: 10px;
+    font-size: 1.25rem;
+    cursor: pointer;
+}
+
+.sidebar-toggle:hover {
+    background: rgba(59, 130, 246, 0.2);
+}
+
+.topbar-title {
+    font-size: 1.1rem;
+    font-weight: 800;
+    color: #f8fafc;
+    margin-right: auto;
+}
+
+
+/* =========================================
+   6. ORIGINAL HERO SECTION
+========================================= */
 
 .hero-section {
     text-align: center;
@@ -67,6 +371,7 @@ body {
 .badge {
     display: inline-flex;
     align-items: center;
+    justify-content: center;
     gap: 8px;
     padding: 10px 18px;
     border: 1px solid rgba(148, 163, 184, 0.35);
@@ -76,6 +381,8 @@ body {
     color: #c4b5fd;
     font-weight: 600;
     margin-bottom: 20px;
+    max-width: 100%;
+    text-align: center;
 }
 
 .hero-section h1 {
@@ -83,7 +390,12 @@ body {
     line-height: 1;
     letter-spacing: -0.06em;
     margin-bottom: 18px;
-    background: linear-gradient(135deg, #ffffff, #93c5fd, #c084fc);
+    background: linear-gradient(
+        135deg,
+        #ffffff,
+        #93c5fd,
+        #c084fc
+    );
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
 }
@@ -95,6 +407,11 @@ body {
     font-size: 1.1rem;
     line-height: 1.7;
 }
+
+
+/* =========================================
+   7. ORIGINAL PLANNER CARD
+========================================= */
 
 .planner-card,
 .result-section {
@@ -130,6 +447,11 @@ body {
     line-height: 1.5;
 }
 
+
+/* =========================================
+   8. ONLINE STATUS
+========================================= */
+
 .status-pill {
     display: flex;
     align-items: center;
@@ -147,10 +469,16 @@ body {
 .status-dot {
     width: 8px;
     height: 8px;
+    flex-shrink: 0;
     border-radius: 50%;
     background: #22c55e;
     box-shadow: 0 0 18px #22c55e;
 }
+
+
+/* =========================================
+   9. TRAVEL INPUT AREA
+========================================= */
 
 .input-area {
     display: grid;
@@ -208,6 +536,11 @@ textarea::placeholder {
     transform: none;
 }
 
+
+/* =========================================
+   10. QUICK PROMPTS
+========================================= */
+
 .quick-prompts {
     display: flex;
     flex-wrap: wrap;
@@ -229,6 +562,191 @@ textarea::placeholder {
     background: rgba(59, 130, 246, 0.2);
     border-color: rgba(96, 165, 250, 0.5);
 }
+
+
+/* =========================================
+   11. NEW CHAT CONVERSATION AREA
+========================================= */
+
+.conversation-section {
+    width: 100%;
+    margin-bottom: 24px;
+}
+
+.conversation-messages {
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+    width: 100%;
+    padding: 12px 0 20px;
+}
+
+/* Generic message container */
+
+.chat-message,
+.message {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    max-width: 100%;
+    min-width: 0;
+}
+
+/* User messages */
+
+.chat-message.user,
+.message.user,
+.user-message {
+    align-self: flex-end;
+    align-items: flex-end;
+    max-width: min(80%, 680px);
+}
+
+.chat-message.user .message-content,
+.message.user .message-content,
+.user-message .message-content {
+    background: linear-gradient(
+        135deg,
+        rgba(37, 99, 235, 0.9),
+        rgba(109, 40, 217, 0.88)
+    );
+    border: 1px solid rgba(147, 197, 253, 0.2);
+    color: #ffffff;
+    border-radius: 20px 20px 5px 20px;
+    padding: 15px 19px;
+    line-height: 1.7;
+    overflow-wrap: anywhere;
+}
+
+/* Assistant messages */
+
+.chat-message.assistant,
+.message.assistant,
+.assistant-message {
+    align-self: flex-start;
+    align-items: flex-start;
+    width: 100%;
+    max-width: 100%;
+}
+
+.chat-message.assistant .message-content,
+.message.assistant .message-content,
+.assistant-message .message-content {
+    width: 100%;
+    background: rgba(15, 23, 42, 0.82);
+    border: 1px solid rgba(148, 163, 184, 0.2);
+    border-radius: 20px 20px 20px 5px;
+    padding: 22px;
+    color: #e2e8f0;
+    line-height: 1.75;
+    overflow-wrap: anywhere;
+}
+
+/* Role labels */
+
+.message-role,
+.chat-message-role {
+    color: #94a3b8;
+    font-size: 0.78rem;
+    font-weight: 800;
+    padding: 0 8px;
+}
+
+/* Message loading indicator */
+
+.message-loading,
+.typing-indicator {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    color: #94a3b8;
+    font-size: 0.9rem;
+    padding: 14px 18px;
+}
+
+.message-content p {
+    margin-bottom: 12px;
+}
+
+.message-content p:last-child {
+    margin-bottom: 0;
+}
+
+.message-content h1,
+.message-content h2,
+.message-content h3 {
+    color: #f8fafc;
+    line-height: 1.3;
+    margin: 20px 0 12px;
+}
+
+.message-content h1 {
+    font-size: 1.65rem;
+}
+
+.message-content h2 {
+    font-size: 1.3rem;
+}
+
+.message-content h3 {
+    font-size: 1.1rem;
+}
+
+.message-content ul,
+.message-content ol {
+    margin: 10px 0 16px 24px;
+}
+
+.message-content li {
+    margin-bottom: 7px;
+}
+
+.message-content a {
+    color: #93c5fd;
+}
+
+.message-content pre {
+    max-width: 100%;
+    overflow-x: auto;
+    background: #020617;
+    padding: 16px;
+    border-radius: 12px;
+    margin: 14px 0;
+}
+
+.message-content code {
+    overflow-wrap: anywhere;
+}
+
+.message-content table {
+    width: 100%;
+    display: block;
+    overflow-x: auto;
+    border-collapse: collapse;
+    margin: 16px 0;
+}
+
+.message-content th,
+.message-content td {
+    padding: 10px 12px;
+    border: 1px solid rgba(148, 163, 184, 0.3);
+    text-align: left;
+}
+
+.message-content th {
+    background: rgba(59, 130, 246, 0.15);
+}
+
+.message-content hr {
+    border: none;
+    border-top: 1px solid rgba(148, 163, 184, 0.25);
+    margin: 20px 0;
+}
+
+
+/* =========================================
+   12. ORIGINAL TRAVEL RESULT SECTION
+========================================= */
 
 .result-section {
     margin-top: 26px;
@@ -271,6 +789,11 @@ textarea::placeholder {
     transform: translateY(-1px);
     box-shadow: 0 16px 36px rgba(34, 197, 94, 0.35);
 }
+
+
+/* =========================================
+   13. ORIGINAL PDF CONTENT
+========================================= */
 
 .pdf-content {
     background: #ffffff;
@@ -380,6 +903,11 @@ textarea::placeholder {
     font-weight: 800;
 }
 
+
+/* =========================================
+   14. ERROR BOX
+========================================= */
+
 .error-box {
     margin-top: 22px;
     padding: 18px 20px;
@@ -390,25 +918,19 @@ textarea::placeholder {
     line-height: 1.5;
 }
 
+
+/* =========================================
+   15. LOADING ANIMATION
+========================================= */
+
 .loader {
     display: inline-block;
     width: 18px;
     height: 18px;
-    border: 3px solid rgba(255,255,255,0.35);
+    border: 3px solid rgba(255, 255, 255, 0.35);
     border-top-color: #ffffff;
     border-radius: 50%;
     animation: spin 0.85s linear infinite;
-}
-
-.hidden {
-    display: none;
-}
-
-footer {
-    text-align: center;
-    color: #64748b;
-    padding: 30px 16px 40px;
-    font-size: 0.92rem;
 }
 
 @keyframes spin {
@@ -417,32 +939,154 @@ footer {
     }
 }
 
+
+/* =========================================
+   16. HIDDEN ELEMENTS
+========================================= */
+
+.hidden,
+[hidden] {
+    display: none !important;
+}
+
+
+/* =========================================
+   17. FOOTER
+========================================= */
+
+footer {
+    text-align: center;
+    color: #64748b;
+    padding: 30px 16px 40px;
+    font-size: 0.92rem;
+}
+
+
+/* =========================================
+   18. PRINT STYLES
+========================================= */
+
 @media print {
+
     body {
         background: #ffffff;
+        color: #111827;
     }
 
+    .page-bg,
+    .sidebar,
+    .topbar,
     .planner-card,
     .hero-section,
+    .conversation-section,
     footer,
     .result-actions,
-    #threadInfo {
-        display: none;
+    #threadInfo,
+    .error-box {
+        display: none !important;
+    }
+
+    .app-shell,
+    .main-column,
+    .app-container {
+        display: block;
+        width: 100%;
+        padding: 0;
+        margin: 0;
     }
 
     .result-section {
+        display: block !important;
         box-shadow: none;
         border: none;
         background: #ffffff;
+        padding: 0;
+        margin: 0;
     }
 
     .pdf-title {
         display: block;
     }
+
+    .pdf-content {
+        padding: 0;
+    }
 }
 
-@media (max-width: 760px) {
+
+/* =========================================
+   19. TABLET RESPONSIVE DESIGN
+========================================= */
+
+@media (max-width: 1100px) {
+
+    .sidebar {
+        width: 240px;
+        min-width: 240px;
+    }
+
     .app-container {
+        width: min(100% - 32px, 1000px);
+    }
+
+    .hero-section h1 {
+        font-size: clamp(2.1rem, 5vw, 4rem);
+    }
+
+    #sendBtn {
+        min-width: 145px;
+    }
+}
+
+
+/* =========================================
+   20. MOBILE RESPONSIVE DESIGN
+========================================= */
+
+@media (max-width: 760px) {
+
+    .sidebar {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: min(290px, 85vw);
+        min-width: 0;
+        height: 100dvh;
+        z-index: 1000;
+        transform: translateX(-105%);
+        transition: transform 0.25s ease;
+        box-shadow: 15px 0 45px rgba(0, 0, 0, 0.4);
+    }
+
+    .sidebar.open,
+    .sidebar.sidebar-open {
+        transform: translateX(0);
+    }
+
+    .sidebar-close {
+        display: inline-flex;
+    }
+
+    .sidebar-toggle {
+        display: inline-flex;
+    }
+
+    .topbar {
+        padding: 12px 16px;
+        min-height: 64px;
+    }
+
+    .topbar-title {
+        font-size: 1rem;
+    }
+
+    .status-pill {
+        padding: 7px 10px;
+        font-size: 0.75rem;
+    }
+
+    .app-container {
+        width: calc(100% - 24px);
         padding-top: 34px;
     }
 
@@ -461,12 +1105,26 @@ footer {
         grid-template-columns: 1fr;
     }
 
+    textarea {
+        min-height: 120px;
+        padding: 16px;
+    }
+
     #sendBtn {
         min-height: 56px;
     }
 
+    .hero-section h1 {
+        font-size: clamp(2rem, 8vw, 3rem);
+    }
+
     .hero-section p {
         font-size: 1rem;
+    }
+
+    .badge {
+        font-size: 0.75rem;
+        padding: 9px 13px;
     }
 
     .result-actions {
@@ -480,5 +1138,90 @@ footer {
 
     .pdf-content {
         padding: 20px;
+    }
+
+    .chat-message.user,
+    .message.user,
+    .user-message {
+        max-width: 92%;
+    }
+
+    .chat-message.assistant .message-content,
+    .message.assistant .message-content,
+    .assistant-message .message-content {
+        padding: 16px;
+    }
+
+    .conversation-messages {
+        gap: 18px;
+    }
+
+    .quick-prompts {
+        gap: 8px;
+    }
+
+    .quick-prompts button {
+        font-size: 0.82rem;
+        padding: 9px 12px;
+    }
+
+    footer {
+        font-size: 0.78rem;
+        padding: 22px 14px 30px;
+    }
+}
+
+
+/* =========================================
+   21. SMALL MOBILE SCREENS
+========================================= */
+
+@media (max-width: 420px) {
+
+    .app-container {
+        width: calc(100% - 20px);
+    }
+
+    .planner-card,
+    .result-section {
+        padding: 16px;
+        border-radius: 18px;
+    }
+
+    .hero-section h1 {
+        font-size: 2rem;
+    }
+
+    .card-header h2,
+    .result-header h2 {
+        font-size: 1.2rem;
+    }
+
+    .topbar {
+        gap: 10px;
+    }
+
+    .topbar-title {
+        font-size: 0.92rem;
+    }
+
+    .pdf-content {
+        padding: 14px;
+    }
+}
+
+
+/* =========================================
+   22. ACCESSIBILITY
+========================================= */
+
+@media (prefers-reduced-motion: reduce) {
+
+    *,
+    *::before,
+    *::after {
+        animation-duration: 0.01ms !important;
+        transition-duration: 0.01ms !important;
+        scroll-behavior: auto !important;
     }
 }
